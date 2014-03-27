@@ -99,7 +99,7 @@ var h = hub{
 	register:   make(chan *client),
 	unregister: make(chan *client),
 	update:     make(chan *client),
-	tick:       time.Tick(time.Second),
+	tick:       time.Tick(70 * time.Millisecond),
 }
 
 func (h *hub) run() {
