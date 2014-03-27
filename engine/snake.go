@@ -4,10 +4,10 @@ import "container/list"
 
 const (
 	startTailMax int       = 4
-	up           Direction = iota
-	down         Direction = iota
-	left         Direction = iota
-	right        Direction = iota
+	Up           Direction = iota
+	Down         Direction = iota
+	Left         Direction = iota
+	Right        Direction = iota
 	alive        state     = iota
 	dead         state     = iota
 )
@@ -27,7 +27,7 @@ type Snake struct {
 func NewSnake() *Snake {
 	return &Snake{
 		TailMax:   startTailMax,
-		Direction: right,
+		Direction: Right,
 		State:     alive,
 		Body:      list.New(),
 		Color:     red,
@@ -59,29 +59,29 @@ func (s *Snake) nextMove() Point {
 	var nextMove Point
 	// compute move
 	switch nextDir {
-	case up:
-		if s.Direction != down {
+	case Up:
+		if s.Direction != Down {
 			nextMove = Point{head[0] - 1, head[1]}
 			s.Direction = nextDir
 		} else {
 			nextMove = Point{head[0] + 1, head[1]}
 		}
-	case down:
-		if s.Direction != up {
+	case Down:
+		if s.Direction != Up {
 			nextMove = Point{head[0] + 1, head[1]}
 			s.Direction = nextDir
 		} else {
 			nextMove = Point{head[0] - 1, head[1]}
 		}
-	case left:
-		if s.Direction != right {
+	case Left:
+		if s.Direction != Right {
 			nextMove = Point{head[0], head[1] - 1}
 			s.Direction = nextDir
 		} else {
 			nextMove = Point{head[0], head[1] + 1}
 		}
-	case right:
-		if s.Direction != left {
+	case Right:
+		if s.Direction != Left {
 			nextMove = Point{head[0], head[1] + 1}
 			s.Direction = nextDir
 		} else {

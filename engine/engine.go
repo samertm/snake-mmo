@@ -2,7 +2,7 @@ package engine
 
 import (
 	"errors"
-	_ "fmt" // DEBUG
+	"fmt" // DEBUG
 	"math/rand"
 )
 
@@ -64,6 +64,14 @@ func updateBoard() {
 
 func isFood(p Point) bool {
 	return Board[p[0]][p[1]] == "fo"
+}
+
+func AddDir(id int, d Direction) error {
+	if snakes[id] == nil {
+		return errors.New("This ID does not exist")
+	}
+	snakes[id].NextDir.PushBack(d)
+	return nil
 }
 
 func AddSnake(id int) error {
@@ -131,7 +139,7 @@ func Tick() {
 				// TODO create new snake instead?
 				newHead := findPoint()
 				snake.Body.PushBack(newHead)
-				snake.Direction = right // TODO direction based on place in board
+				snake.Direction = Right // TODO direction based on place in board
 				snake.TailMax = startTailMax
 				snake.State = alive
 			} else {
@@ -139,5 +147,7 @@ func Tick() {
 			}
 		}
 	}
+	// DEBUG
+	fmt.Println("ticked")
 	updateBoard()
 }

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -23,7 +24,7 @@ const (
 	maxMessageSize = 512
 )
 
-func CreateSendData() []byte {
+func createSendData() []byte {
 	// naive send
 	data := make([]byte, 0, 50)
 	for i := 0; i < engine.BoardSize; i++ {
@@ -44,6 +45,25 @@ func CreateSendData() []byte {
 	return data
 }
 
+func decodeDir(dir []byte) (engine.Direction, error) {
+	d := string(dir)
+	var result engine.Direction = engine.Right
+	var err error = nil
+	switch d {
+	case "up":
+		result = engine.Up
+	case "down":
+		result = engine.Down
+	case "right":
+		result = engine.Right
+	case "left":
+		result = engine.Left
+	default:
+		err = errors.New("decodeDir: invalid dir")
+	}
+	return result, err
+}
+
 func handleWs(w http.ResponseWriter, r *http.Request) {
 	ws, err := websocket.Upgrade(w, r, nil, 1024, 1024)
 	if _, ok := err.(websocket.HandshakeError); ok {
@@ -61,42 +81,60 @@ func handleWs(w http.ResponseWriter, r *http.Request) {
 	}
 	h.register <- c
 	go c.writePump()
+	c.readPump()
 }
 
 type hub struct {
-	clients    map[*client]bool
+	clients    map[*client]int
 	broadcast  chan []byte
 	register   chan *client
 	unregister chan *client
 	update     chan *client
+	tick       <-chan time.Time
 }
 
 var h = hub{
-	clients:    make(map[*client]bool),
+	clients:    make(map[*client]int),
 	broadcast:  make(chan []byte),
 	register:   make(chan *client),
 	unregister: make(chan *client),
 	update:     make(chan *client),
+	tick:       time.Tick(time.Second),
 }
 
-func (h *hub) Run() {
+func (h *hub) run() {
+	id := 0
 	for {
 		select {
 		case c := <-h.register:
-			h.clients[c] = true
+			h.clients[c] = id
+			id++
 			// DEBUG add engine stuff
+			engine.AddSnakeEmptyPoint(h.clients[c])
 		case c := <-h.unregister:
+			engine.RemoveSnake(h.clients[c])
 			delete(h.clients, c)
 			close(c.send)
 		case c := <-h.update:
 			// DEBUG
 			fmt.Println(string(c.move))
+			dir, err := decodeDir(c.move)
 			c.moveSemaphore <- 0
+			if err != nil {
+				fmt.Println(err)
+			}
+			engine.AddDir(h.clients[c], dir)
+		case <-h.tick:
+			if len(h.clients) != 0 {
+				go func() {
+					engine.Tick()
+					h.broadcast <- createSendData()
+				}()
+			}
 		case d := <-h.broadcast:
 			for c := range h.clients {
 				select {
 				case c.send <- d:
-					continue
 				default:
 					close(c.send)
 					delete(h.clients, c)
@@ -107,8 +145,9 @@ func (h *hub) Run() {
 }
 
 func ListenAndServe(ipaddr string) {
-	fmt.Printf("Setup server on ws://%s/ws\n", ipaddr)
-	http.HandleFunc("/ws", handleWs)
+	fmt.Printf("Setup server on ws://%s\n", ipaddr)
+	http.HandleFunc("/", handleWs)
+	go h.run()
 	if err := http.ListenAndServe(ipaddr, nil); err != nil {
 		log.Fatal(err)
 	}
