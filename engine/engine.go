@@ -2,7 +2,6 @@ package engine
 
 import (
 	"errors"
-	"fmt" // DEBUG
 	"math/rand"
 )
 
@@ -147,7 +146,5 @@ func Tick() {
 			}
 		}
 	}
-	// DEBUG
-	fmt.Println("ticked")
 	updateBoard()
 }

@@ -109,15 +109,14 @@ func (h *hub) run() {
 		case c := <-h.register:
 			h.clients[c] = id
 			id++
-			// DEBUG add engine stuff
 			engine.AddSnakeEmptyPoint(h.clients[c])
+			fmt.Printf("Snake %d joined.\n", h.clients[c])
 		case c := <-h.unregister:
+			fmt.Printf("Snake %d left.\n", h.clients[c])
 			engine.RemoveSnake(h.clients[c])
 			delete(h.clients, c)
 			close(c.send)
 		case c := <-h.update:
-			// DEBUG
-			fmt.Println(string(c.move))
 			dir, err := decodeDir(c.move)
 			c.moveSemaphore <- 0
 			if err != nil {

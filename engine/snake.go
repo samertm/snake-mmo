@@ -61,31 +61,31 @@ func (s *Snake) nextMove() Point {
 	switch nextDir {
 	case Up:
 		if s.Direction != Down {
-			nextMove = Point{head[0] - 1, head[1]}
+			nextMove = Point{head[0], head[1] - 1}
 			s.Direction = nextDir
 		} else {
-			nextMove = Point{head[0] + 1, head[1]}
+			nextMove = Point{head[0], head[1] + 1}
 		}
 	case Down:
 		if s.Direction != Up {
+			nextMove = Point{head[0], head[1] + 1}
+			s.Direction = nextDir
+		} else {
+			nextMove = Point{head[0], head[1] - 1}
+		}
+	case Left:
+		if s.Direction != Right {
+			nextMove = Point{head[0] - 1, head[1]}
+			s.Direction = nextDir
+		} else {
+			nextMove = Point{head[0] + 1, head[1]}
+		}
+	case Right:
+		if s.Direction != Left {
 			nextMove = Point{head[0] + 1, head[1]}
 			s.Direction = nextDir
 		} else {
 			nextMove = Point{head[0] - 1, head[1]}
-		}
-	case Left:
-		if s.Direction != Right {
-			nextMove = Point{head[0], head[1] - 1}
-			s.Direction = nextDir
-		} else {
-			nextMove = Point{head[0], head[1] + 1}
-		}
-	case Right:
-		if s.Direction != Left {
-			nextMove = Point{head[0], head[1] + 1}
-			s.Direction = nextDir
-		} else {
-			nextMove = Point{head[0], head[1] - 1}
 		}
 	}
 	return nextMove
