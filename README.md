@@ -12,7 +12,8 @@ We need to modify the server to compute and pass the high/current scores, and we
 
 ### Message Passing and Parsing
 * The message format needs to be changed from "\(\d+ \d+ \w+\)*" (the escaped parentheses, like "\(", mean literal parentheses in the string) to the following in BNF:
-<pre>
+
+````
           message ::== "(" \<message-part\> ")"
      message-part ::== \<location-message\> 
                      | \<score-message\>
@@ -23,7 +24,8 @@ We need to modify the server to compute and pass the high/current scores, and we
      name-message ::== "name " \<string\>
 direction-message ::== "dir " \<direction\>
         direction ::== "left" | "right" | "up" | "down"
-            color ::== a string defined as a constant in color.go</pre>
+            color ::== a string defined as a constant in color.go
+````
 
 #### Server side
 
