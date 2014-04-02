@@ -45,6 +45,7 @@ func createSendData() []byte {
 	return data
 }
 
+// dir should be in the form "up", "down", "left", or "right"
 func decodeDir(dir []byte) (engine.Direction, error) {
 	d := string(dir)
 	var result engine.Direction = engine.Right
