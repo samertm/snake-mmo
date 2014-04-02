@@ -14,15 +14,15 @@ We need to modify the server to compute and pass the high/current scores, and we
 * The message format needs to be changed from "\(\d+ \d+ \w+\)*" (the escaped parentheses, like "\(", mean literal parentheses in the string) to the following in BNF:
 
 ````
-          message ::== "(" \<message-part\> ")"
-     message-part ::== \<location-message\> 
-                     | \<score-message\>
-                     | \<name-message\>
-                     | \<direction-message\>
- location-message ::== "loc  " \<number\> " " \<number\> " " \<color\>
-    score-message ::== "score " \<string\> " " \<number\>
-     name-message ::== "name " \<string\>
-direction-message ::== "dir " \<direction\>
+          message ::== "(" <message-part> ")"
+     message-part ::== <location-message> 
+                     | <score-message>
+                     | <name-message>
+                     | <direction-message>
+ location-message ::== "loc  " <number> " " <number> " " <color>
+    score-message ::== "score " <string> " " <number>
+     name-message ::== "name " <string>
+direction-message ::== "dir " <direction>
         direction ::== "left" | "right" | "up" | "down"
             color ::== a string defined as a constant in color.go
 ````
