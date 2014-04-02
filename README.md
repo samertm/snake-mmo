@@ -11,7 +11,7 @@ Run the command 'go get github.com/gorilla/websocket' to grab the only dependenc
 We need to modify the server to compute and pass the high/current scores, and we need to modify the frontend to parse the high/current scores and attach them to the DOM. Changes that need to be made:
 
 ### Message Passing and Parsing
-* The message format needs to be changed from "\(\d+ \d+ \w+\)*" (the escaped parentheses, like "\(", mean literal parentheses in the string) to the following in BNF:
+* The message format needs to be changed from "(\\(\d+ \d+ \w+\\))*" (the escaped parentheses, like "\(", mean literal parentheses in the string) to the following in BNF:
 
 ````
           message ::== "(" <message-part> ")"
