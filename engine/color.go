@@ -14,10 +14,13 @@ var (
 type color int
 
 const (
-	white color = iota
-	black color = iota
-	red   color = iota
-	blue  color = iota
+	white  color = iota
+	black  color = iota
+	red    color = iota
+	blue   color = iota
+	cyan   color = iota
+	purple color = iota
+	green  color = iota
 )
 
 func colorString(c color) string {
@@ -31,6 +34,12 @@ func colorString(c color) string {
 		str = "bl"
 	case red:
 		str = "rd"
+	case cyan:
+		str = "cy"
+	case purple:
+		str = "pu"
+	case green:
+		str = "gr"
 	default:
 		str = "bk"
 	}

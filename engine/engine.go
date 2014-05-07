@@ -97,7 +97,7 @@ func AddSnakeEmptyPoint(id int) error {
 	}
 	snakes[id].Body.PushBack(findPoint())
 	// make snake random color
-	snakes[id].Color = color(rand.Intn(3) + 1)
+	snakes[id].Color = color(rand.Intn(6) + 1)
 	return nil
 }
 

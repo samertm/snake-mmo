@@ -11,6 +11,9 @@ window.onload = function () {
             bk: "rgb(0,0,0)",
             bl: "rgb(0,0,255)",
             wh: "rgb(255,255,255)",
+            cy: "rgb(0,255,255)",
+            pu: "rgb(128,0,128",
+            gr: "rgb(0,0,255)",
             fo: "rgb(192,192,192)"
         }
         var canv = document.getElementById("snakegame")
