@@ -11,14 +11,14 @@ const (
 
 var (
 	Board  [BoardSize][BoardSize]string
-	snakes map[int]*Snake
+	Snakes map[int]*Snake
 	food   Point
 )
 
 type Point [2]int
 
 func init() {
-	snakes = make(map[int]*Snake)
+	Snakes = make(map[int]*Snake)
 	food = findPoint()
 }
 
@@ -52,11 +52,11 @@ func updateBoard() {
 		}
 	}
 	Board[food[0]][food[1]] = "fo"
-	for _, s := range snakes {
+	for _, s := range Snakes {
 		body := s.Body
 		for e := body.Front(); e != nil; e = e.Next() {
 			p := e.Value.(Point)
-			Board[p[0]][p[1]] = colorString(s.Color)
+			Board[p[0]][p[1]] = ColorString(s.Color)
 		}
 	}
 }
@@ -66,18 +66,18 @@ func isFood(p Point) bool {
 }
 
 func AddDir(id int, d Direction) error {
-	if snakes[id] == nil {
+	if Snakes[id] == nil {
 		return errors.New("This ID does not exist")
 	}
-	snakes[id].NextDir.PushBack(d)
+	Snakes[id].NextDir.PushBack(d)
 	return nil
 }
 
 func AddSnake(id int) error {
-	if snakes[id] != nil {
+	if Snakes[id] != nil {
 		return errors.New("This ID exists")
 	}
-	snakes[id] = NewSnake()
+	Snakes[id] = NewSnake()
 	return nil
 }
 
@@ -86,7 +86,7 @@ func AddSnakeAtPoint(id int, p Point) error {
 	if err != nil {
 		return err
 	}
-	snakes[id].Body.PushBack(p)
+	Snakes[id].Body.PushBack(p)
 	return nil
 }
 
@@ -95,14 +95,14 @@ func AddSnakeEmptyPoint(id int) error {
 	if err != nil {
 		return err
 	}
-	snakes[id].Body.PushBack(findPoint())
+	Snakes[id].Body.PushBack(findPoint())
 	// make snake random color
-	snakes[id].Color = color(rand.Intn(6) + 1)
+	Snakes[id].Color = color(rand.Intn(6) + 1)
 	return nil
 }
 
 func AddMove(id int, d Direction) error {
-	s, ok := snakes[id]
+	s, ok := Snakes[id]
 	if ok == false {
 		return errors.New("This ID does not exist")
 	}
@@ -111,15 +111,15 @@ func AddMove(id int, d Direction) error {
 }
 
 func RemoveSnake(id int) error {
-	if _, ok := snakes[id]; ok == false {
+	if _, ok := Snakes[id]; ok == false {
 		return errors.New("This ID does not exist")
 	}
-	delete(snakes, id)
+	delete(Snakes, id)
 	return nil
 }
 
 func Tick() {
-	for _, snake := range snakes {
+	for _, snake := range Snakes {
 		switch snake.State {
 		case alive:
 			nextHead := snake.nextMove()

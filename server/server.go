@@ -24,7 +24,7 @@ const (
 	maxMessageSize = 512
 )
 
-func createSendData() []byte {
+func createLocationData() []byte {
 	// naive send
 	data := make([]byte, 0, 50)
 	for i := 0; i < engine.BoardSize; i++ {
@@ -33,7 +33,7 @@ func createSendData() []byte {
 			if val == "" {
 				continue
 			}
-			data = append(data, '(')
+			data = append(data, "(loc "...)
 			data = append(data, strconv.Itoa(i)...)
 			data = append(data, ' ')
 			data = append(data, strconv.Itoa(j)...)
@@ -42,6 +42,25 @@ func createSendData() []byte {
 			data = append(data, ')')
 		}
 	}
+	return data
+}
+
+func createScoreData() []byte {
+	data := make([]byte, 0, 50)
+	for _, snake := range engine.Snakes {
+		data = append(data, "(score "...)
+		data = append(data, engine.ColorString(snake.Color)...)
+		data = append(data, ' ')
+		data = append(data, strconv.Itoa(snake.TailMax/4-1)...)
+		data = append(data, ')')
+	}
+	return data
+}
+
+func createSendData() []byte {
+	data := make([]byte, 0, 50)
+	data = append(data, createLocationData()...)
+	data = append(data, createScoreData()...)
 	return data
 }
 

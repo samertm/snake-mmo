@@ -18,9 +18,56 @@ window.onload = function () {
         }
         var canv = document.getElementById("snakegame")
         var ctx = canv.getContext('2d')
+        oldScores = []
+        scoresEqual = function(scores0, scores1) {
+            if (scores0.length != scores1.length) {
+                return false
+            }
+            for (var i = 0; i < scores0.length; i++) {
+                if (scores0[i].color != scores1[i].color) {
+                    return false
+                } else if (scores0[i].score != scores1[i].score) {
+                    return false
+                }
+            }
+            return true
+        }
+        sortScores = function(scores) {
+            if (scores.length == 0) {
+                return []
+            } else if (scores.length == 1) {
+                return scores
+            }
+            var pivotindex = Math.floor(scores.length/2)
+            var pivot = scores[pivotindex]
+            scores.splice(pivotindex, 1)
+            var left = []
+            var right = []
+            for (var i = 0; i < scores.length; i++) {
+                if (scores[i].score < pivot.score) {
+                    right.push(scores[i])
+                } else {
+                    left.push(scores[i])
+                }
+            }
+            return sortScores(left).concat(pivot).concat(sortScores(right))
+        }
+        snakepar = document.getElementById("snakepar")
+        addScores = function(scores) {
+            scores = sortScores(scores)
+            if (!scoresEqual(oldScores, scores)) {
+                str = ""
+                for (var i = 0; i < scores.length; i++) {
+                    str += scores[i].color + " " + scores[i].score + " "
+                }
+                snakepar.innerText = str
+            }
+            oldScores = scores
+        }
         var drawScreen = function(data) {
             var tmpstr = ""
             var tmparr = []
+            var scores = []
             var state = "out"
             ctx.fillStyle = color["wh"]
             ctx.fillRect(0, 0, offset * boardlength, offset * boardlength)
@@ -29,14 +76,46 @@ window.onload = function () {
                 switch (state) {
                 case "out":
                     if (c == "(") {
-                        state = "in"
+                        state = "in-msg"
                         tmpstr = ""
                         tmparr = []
                     } else {
                         return false
                     }
                     break;
-                case "in":
+                case "in-msg":
+                    if (c == " ") {
+                        if (tmpstr == "loc") {
+                            state = "in-loc"
+                            tmpstr = ""
+                        } else if (tmpstr = "score") {
+                            state = "in-score"
+                            tmpstr = ""
+                        } else {
+                            console.log("ERROR: " + tmpstr)
+                            state = "out"
+                            tmpstr = ""
+                        }
+                    } else {
+                        tmpstr += c
+                    }
+                    break;
+                case "in-score":
+                    if (c == " ") {
+                        tmparr.push(tmpstr)
+                        tmpstr = ""
+                    } else if (c == ")") {
+                        tmparr.push(tmpstr)
+                        // tmparr[0] is the color, tmparr[1] is the score
+                        scores.push({color: tmparr[0], score: Number(tmparr[1])})
+                        tmparr = []
+                        tmpstr = ""
+                        state = "out"
+                    } else {
+                        tmpstr += c
+                    }
+                    break;
+                case "in-loc":
                     if (c == " ") {
                         tmparr.push(tmpstr)
                         tmpstr = ""
@@ -55,6 +134,7 @@ window.onload = function () {
                     break;
                 }
             }
+            addScores(scores)
         }
         var conn = new WebSocket("ws://localhost:4027")
         conn.onclose = function(evt) {

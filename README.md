@@ -17,11 +17,9 @@ We need to modify the server to compute and pass the high/current scores, and we
           message ::== "(" <message-part> ")"
      message-part ::== <location-message> 
                      | <score-message>
-                     | <name-message>
                      | <direction-message>
  location-message ::== "loc  " <number> " " <number> " " <color>
     score-message ::== "score " <string> " " <number>
-     name-message ::== "name " <string>
 direction-message ::== "dir " <direction>
         direction ::== "left" | "right" | "up" | "down"
             color ::== a string defined as a constant in color.go
@@ -38,17 +36,3 @@ direction-message ::== "dir " <direction>
 #### Client side
 
 * Update drawScreen to parse incoming messages. Think about refactoring the parsing part into multiple functions.
-
-### Name/Score Functionality
-
-#### Server side
-
-* Update snake data structure in snake.go to hold name. Update all add snake functions in engine.go and snake.go.
-
-* Update server.go to wait until a name message has been passed from the client to create a snake.
-
-#### Client side
-
-* Add a prompt for entering your name at start up.
-
-* Create function to pass name to the the server.

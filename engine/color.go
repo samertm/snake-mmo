@@ -23,7 +23,7 @@ const (
 	green  color = iota
 )
 
-func colorString(c color) string {
+func ColorString(c color) string {
 	var str string
 	switch c {
 	case white:
