@@ -46,6 +46,10 @@ window.onload = function () {
             for (var i = 0; i < scores.length; i++) {
                 if (scores[i].score < pivot.score) {
                     right.push(scores[i])
+                } else if (scores[i].score > pivot.score) {
+                    left.push(scores[i])
+                } else if (scores[i].color > pivot.color) {
+                    right.push(scores[i])
                 } else {
                     left.push(scores[i])
                 }
