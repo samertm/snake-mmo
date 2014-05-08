@@ -142,7 +142,7 @@ window.onload = function () {
             }
             addScores(scores)
         }
-        var conn = new WebSocket("ws://localhost:4027")
+        var conn = new WebSocket("ws://samertm.com:4027")
         conn.onclose = function(evt) {
             var test = document.createTextNode("connection closed")
             document.getElementById("snakepar").appendChild(test)
