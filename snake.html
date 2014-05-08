@@ -6,7 +6,12 @@
   <body>
     <h2>snake game</h2>
     <p id="snakepar">This is a snake game written in Go with a javascript client.</p>
-    <canvas id="snakegame" width="512" height="512" style="border: 1px solid black">Your browser does not support the HTML5 canvas tag.</canvas>
+    <canvas id="snakegame" width="512" height="512" style="float: left; border: 1px solid black">Your browser does not support the HTML5 canvas tag.</canvas>
+    <div style="float: left; margin: 0px 20px">
+      <p>scores</p>
+      <ul id="snakescores">
+      </ul>
+    </div>
     <script src="snake.js"></script>
   </body>
 </html>

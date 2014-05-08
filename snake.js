@@ -18,8 +18,8 @@ window.onload = function () {
         }
         var canv = document.getElementById("snakegame")
         var ctx = canv.getContext('2d')
-        oldScores = []
-        scoresEqual = function(scores0, scores1) {
+        var oldScores = []
+        var scoresEqual = function(scores0, scores1) {
             if (scores0.length != scores1.length) {
                 return false
             }
@@ -32,7 +32,7 @@ window.onload = function () {
             }
             return true
         }
-        sortScores = function(scores) {
+        var sortScores = function(scores) {
             if (scores.length == 0) {
                 return []
             } else if (scores.length == 1) {
@@ -52,15 +52,17 @@ window.onload = function () {
             }
             return sortScores(left).concat(pivot).concat(sortScores(right))
         }
-        snakepar = document.getElementById("snakepar")
-        addScores = function(scores) {
+        var snakepar = document.getElementById("snakepar")
+        var ul = document.getElementById("snakescores")
+        var addScores = function(scores) {
             scores = sortScores(scores)
             if (!scoresEqual(oldScores, scores)) {
-                str = ""
+                var str = ""
                 for (var i = 0; i < scores.length; i++) {
-                    str += scores[i].color + " " + scores[i].score + " "
+                    str += "<li>" + scores[i].color + " " +
+                        scores[i].score + "</li>"
                 }
-                snakepar.innerText = str
+                ul.innerHTML = str
             }
             oldScores = scores
         }
