@@ -16,6 +16,16 @@ window.onload = function () {
             gr: "rgb(0,255,0)",
             fo: "rgb(192,192,192)"
         }
+        var colorToString = {
+            rd: "Red",
+            bk: "Black",
+            bl: "Blue",
+            wh: "White",
+            cy: "Cyan",
+            pu: "Purple",
+            gr: "Green",
+            fo: "Food",
+        }
         var canv = document.getElementById("snakegame")
         var ctx = canv.getContext('2d')
         var oldScores = []
@@ -63,7 +73,7 @@ window.onload = function () {
             if (!scoresEqual(oldScores, scores)) {
                 var str = ""
                 for (var i = 0; i < scores.length; i++) {
-                    str += "<li>" + scores[i].color + " " +
+                    str += "<li>" + colorToString[scores[i].color] + " " +
                         scores[i].score + "</li>"
                 }
                 ul.innerHTML = str
@@ -142,7 +152,7 @@ window.onload = function () {
             }
             addScores(scores)
         }
-        var conn = new WebSocket("ws://samertm.com:4027")
+        var conn = new WebSocket("ws://localhost:4027")
         conn.onclose = function(evt) {
             var test = document.createTextNode("connection closed")
             document.getElementById("snakepar").appendChild(test)
