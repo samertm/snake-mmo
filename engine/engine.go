@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"container/list"
 	"errors"
 	"math/rand"
 )
@@ -140,6 +141,7 @@ func Tick() {
 				// TODO create new snake instead?
 				newHead := findPoint()
 				snake.Body.PushBack(newHead)
+				snake.NextDir = list.New()
 				snake.Direction = Right // TODO direction based on place in board
 				snake.TailMax = startTailMax
 				snake.State = alive
