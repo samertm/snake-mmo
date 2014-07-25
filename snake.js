@@ -28,6 +28,9 @@ window.onload = function () {
         }
         var canv = document.getElementById("snakegame")
         var ctx = canv.getContext('2d')
+        // initialize canvas to white.
+        ctx.fillStyle = color["wh"]
+        ctx.fillRect(0, 0, offset * boardlength, offset * boardlength)
         var oldScores = []
         var scoresEqual = function(scores0, scores1) {
             if (scores0.length != scores1.length) {
@@ -80,13 +83,14 @@ window.onload = function () {
             }
             oldScores = scores
         }
-        var drawScreen = function(data) {
+        var drawScreen = function(data, oldTiles) {
             var tmpstr = ""
             var tmparr = []
             var scores = []
+            var newTiles = []
             var state = "out"
-            ctx.fillStyle = color["wh"]
-            ctx.fillRect(0, 0, offset * boardlength, offset * boardlength)
+            // ctx.fillStyle = color["wh"]
+            // ctx.fillRect(0, 0, offset * boardlength, offset * boardlength)
             for (var i = 0; i < data.length; i++) {
                 var c = data[i]
                 switch (state) {
@@ -137,10 +141,11 @@ window.onload = function () {
                         tmpstr = ""
                     } else if (c == ")") {
                         tmparr.push(tmpstr)
-                        ctx.fillStyle = color[tmparr[2]]
-                        ctx.fillRect(offset * parseInt(tmparr[0]),
-                                     offset * parseInt(tmparr[1]),
-                                     offset, offset)
+                        // ctx.fillStyle = color[tmparr[2]]
+                        // ctx.fillRect(offset * parseInt(tmparr[0]),
+                        //              offset * parseInt(tmparr[1]),
+                        //              offset, offset)
+                        newTiles.push({color: color[tmparr[2]], x: parseInt(tmparr[0]), y: parseInt(tmparr[1])});
                         tmparr = []
                         tmpstr = ""
                         state = "out"
@@ -150,15 +155,42 @@ window.onload = function () {
                     break;
                 }
             }
-            addScores(scores)
+            tiles = newTiles.slice(0); // clone tiles
+            // Does javascript test member-wise equality?
+            var tileEqual = function(t0, t1) {
+                return t0.color == t1.color && t0.x == t1.x && t0.y == t1.y;
+            }
+            console.log("old: ", oldTiles, "new: ", newTiles)
+            for (var i = 0; i < tiles.length; i++) {
+                for (var j = 0; j < oldTiles.length; j++) {
+                    if (tileEqual(tiles[i], oldTiles[j])) {
+                        tiles.splice(i, 1);
+                        oldTiles.splice(j, 1);
+                        i--;
+                        j--;
+                        break;
+                    }
+                }
+            }
+            for (var i = 0; i < oldTiles.length; i++) {
+                ctx.fillStyle = color["wh"];
+                ctx.fillRect(offset * oldTiles[i].x, offset * oldTiles[i].y, offset, offset);
+            }
+            for (var i = 0; i < tiles.length; i++) {
+                ctx.fillStyle = tiles[i].color;
+                ctx.fillRect(offset * tiles[i].x, offset * tiles[i].y, offset, offset);
+            }
+            addScores(scores);
+            return newTiles;
         }
         var conn = new WebSocket("ws://localhost:4027")
         conn.onclose = function(evt) {
             var test = document.createTextNode("connection closed")
             document.getElementById("snakepar").appendChild(test)
         }
+        var tiles = []
         conn.onmessage = function(evt) {
-            drawScreen(evt.data)
+            tiles = drawScreen(evt.data, tiles)
         }
         
         var parseKeydown = function(evt) {
