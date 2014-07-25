@@ -198,13 +198,24 @@ window.onload = function () {
                 // connection is closed or closing
                 return
             }
-            evt.preventDefault()
             var code = evt.keyCode;
             switch (code) {
-            case 37: conn.send("left"); break;
-            case 38: conn.send("up"); break;
-            case 39: conn.send("right"); break;
-            case 40: conn.send("down"); break;
+            case 37:
+                evt.preventDefault();
+                conn.send("left");
+                break;
+            case 38:
+                evt.preventDefault();
+                conn.send("up");
+                break;
+            case 39:
+                evt.preventDefault();
+                conn.send("right");
+                break;
+            case 40:
+                evt.preventDefault();
+                conn.send("down");
+                break;
             }
         }
         window.addEventListener('keydown', parseKeydown, true)
