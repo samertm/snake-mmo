@@ -160,7 +160,6 @@ window.onload = function () {
             var tileEqual = function(t0, t1) {
                 return t0.color == t1.color && t0.x == t1.x && t0.y == t1.y;
             }
-            console.log("old: ", oldTiles, "new: ", newTiles)
             for (var i = 0; i < tiles.length; i++) {
                 for (var j = 0; j < oldTiles.length; j++) {
                     if (tileEqual(tiles[i], oldTiles[j])) {
