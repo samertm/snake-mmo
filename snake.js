@@ -1,7 +1,12 @@
 /* the height and width of the canvas should be
- * boardlength * offset. Substitute ws://localhost:4027
- * with your url.
+ * boardlength * offset.
  */
+
+var scheme = "ws://";
+var host = "localhost";
+var port = "4027";
+var ip = scheme + host + ":" + port;
+
 window.onload = function () {
     if (window["WebSocket"]) {
         var boardlength = 32
@@ -182,7 +187,7 @@ window.onload = function () {
             addScores(scores);
             return newTiles;
         }
-        var conn = new WebSocket("ws://localhost:4027")
+        var conn = new WebSocket(ip);
         conn.onclose = function(evt) {
             var test = document.createTextNode("connection closed")
             document.getElementById("snakepar").appendChild(test)
