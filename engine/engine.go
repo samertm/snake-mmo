@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"errors"
 	"math/rand"
+	"time"
 )
 
 const (
@@ -21,9 +22,9 @@ type Point [2]int
 func init() {
 	Snakes = make(map[int]*Snake)
 	food = findPoint()
+	rand.Seed(time.Now().UnixNano())
 }
 
-// TODO seed rand?
 // TODO refactor into (b *Board) functions?
 func findPoint() Point {
 	var p Point
